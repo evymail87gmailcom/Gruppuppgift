@@ -19,7 +19,8 @@ document.body.appendChild(columnleft);
 var columnright = document.createElement("div");
 columnright.className = "columnright";
 document.body.appendChild(columnright);
-
+var item = [0];
+var nextarray = new Array(2);
 // when called this function will add a drop down menu
 function dropDown() {
     console.log("adding drop down list")
@@ -45,10 +46,10 @@ function dropDown() {
         ["country 6"]
     ]
     */
-    var item=[0];
+   
     //Get instance "country" from mock-api
     function chooseCountrie() {
-        item.length = 0;
+        
 
         const countryUri = 'https://5eb43f8c2b81f7001630838d.mockapi.io/countriesList';
         fetch(countryUri)
@@ -56,29 +57,30 @@ function dropDown() {
             .then(function (mockData) {
                 console.log(mockData);
                 return mockData.map(function (countryIso) {
-                    
+                    item.length = 0;
                     var option = document.createElement("option");
                     option.text = countryIso.Country;
                     option.value = countryIso.ISO;
-
-                    item.push(option.text);
-                  //
-                    console.log(item);
-                    
+                 
+                    item.push(option.text, option.value);
+                    nextarray.push([option.text, option.value]);
+                    console.table(nextarray);
+                    //console.log(item);
+                   
+                        var listItem = document.createElement("p"); // creating paragraph element 
+                        listItem.appendChild(document.createTextNode(item[0])); // adding item from list to paragraph 
+                        fullList.appendChild(listItem); // adding paragraph to list element
+                        document.getElementsByName(listItem).innerHTML = item;
+                  
                  
                 }) 
             })
         //Problemet här är att det nya värdet av item inte hänger med
         // iterate a list using a for loop
-        for (var i = 0; i < item.length; i++) {
-            var listItem = document.createElement("p"); // creating paragraph element 
-            listItem.appendChild(document.createTextNode(item[i])); // adding item from list to paragraph 
-            fullList.appendChild(listItem); // adding paragraph to list element
-            document.getElementsByName(listItem).innerHTML = item;
-        }
+        
     }
    
- 
+
     chooseCountrie();
  
     button.addEventListener("click",
@@ -110,52 +112,76 @@ function dropDown() {
 addheader();
 dropDown();
 
+
+var next;
+
+console.log(next);
+
+
+
+
+
+
+
+
+
+
+
+
 function getCountries() {
+    var capital = document.createElement("div"); // creates a div element to put everything into
+    capital.id = "capital"; // assigning classname to access element in css file
+    document.body.appendChild(capital);
 
-    //Input till parametern
-    //var k = "SE";
- 
-   // console.log(document.getElementById("countrycode").innerHTML = k);
-    //console.log(document.getElementsByTagName("div"));
-
-
+   var textT = "";
     var xmlhttp = new XMLHttpRequest();
     xmlhttp.open("POST", 'http://webservices.oorsprong.org/websamples.countryinfo/CountryInfoService.wso?WSDL', true);
- 
- 
-    var soapmessage =
-        `<soap:Envelope xmlns:soap="http://www.w3.org/2003/05/soap-envelope" xmlns:web="http://www.oorsprong.org/websamples.countryinfo">
-   <soap:Header/>
-   <soap:Body>
+ //Variabel som isokoden läggs i 
+    var isoCode = "SE";
+    //meddelande till soapapi
+    var soapmessage =`<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:web="http://www.oorsprong.org/websamples.countryinfo">
+   <soapenv:Header/>
+   <soapenv:Body>
       <web:CapitalCity>
-         <web:sCountryISOCode>'+'</web:sCountryISOCode>
+         <web:sCountryISOCode>SE</web:sCountryISOCode>
       </web:CapitalCity>
-   </soap:Body>
-</soap:Envelope>`;
-    xmlhttp.setRequestHeader("Content-Type", "text/xml");
-    xmlhttp.send(soapmessage);
-    console.log(soapmessage);
+   </soapenv:Body>
+</soapenv:Envelope>`;
+  
+
+    var parser, xmlDoc;
+    parser = new DOMParser();
+    
 
     xmlhttp.onreadystatechange = function () {
         if (xmlhttp.readyState == 4) {
             if (xmlhttp.status == 200) {
                 // prints the response to the console
-                console.log(xmlhttp.responseXML);
+
+                xmlDoc = parser.parseFromString(xmlhttp.responseXML, "text/xml");
+               
+
+                textT=xmlDoc.getElementsByTagName('m:CapitalCityResult')[0].childNodes[0];
+                console.log(textT);
+                // document.getElementById("capital").innerHTML = 'Capital City: '+textT.nodeValue;
             }
-                
+           
             }
         }
     
     
 
-    
+    //Input till parametern
+    var k = "SE";
 
+   // console.log(document.getElementById("isoCode").innerHTML = k);
+    //console.log(document.getElementsByTagName("div"));
+    //var hej = xmlhttp.response.getElementsByName("CapitalCity");
+    xmlhttp.setRequestHeader('Content-Type', 'text/xml');
+    xmlhttp.send(soapmessage);
+    console.log(soapmessage);
 }
-getCountries();
-
-
-
-
+//getCountries();
 
 
 
