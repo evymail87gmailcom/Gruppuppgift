@@ -1,14 +1,15 @@
 // JavaScript source code
 console.log("Script is running")
 
-function addheader(){
+function addheader() {
     console.log("adding header");
     var header = document.createElement("div");
     header.className = "header";
-    var text = document.createTextNode("HEADER"); 
+    var text = document.createTextNode("HEADER");
     header.appendChild(text);
     document.body.appendChild(header);
 }
+addheader();
 
 /* this could also be set into a function like the header function, I did it this way so the div is global and reachable for dropDown function */
 console.log("adding columns");
@@ -35,19 +36,9 @@ function dropDown() {
     fullList.id = "dropdown-content"; // assigning id to get this element later on
     fullList.className = "dropdown-content"; // assigning classname for css file, and also window.onclick event
 
-    // will be replaced by mockAPI countries
-    /*var item = [
-        ["country 1"],
-        ["country 2"],
-        ["country 3"],
-        ["country 4"],
-        ["country 5"],
-        ["country 6"]
-    ]
-    */
-    var item=[0];
+    var item = [[0]];
     //Get instance "country" from mock-api
-    function chooseCountrie() {
+    function chooseCountries() {
         item.length = 0;
 
         const countryUri = 'https://5eb43f8c2b81f7001630838d.mockapi.io/countriesList';
@@ -55,20 +46,16 @@ function dropDown() {
             .then((resp) => resp.json())
             .then(function (mockData) {
                 console.log(mockData);
+                console.log(item);
                 return mockData.map(function (countryIso) {
-                    
+
                     var option = document.createElement("option");
                     option.text = countryIso.Country;
                     option.value = countryIso.ISO;
+                    item.push(option.text, option.value);
 
-                    item.push(option.text);
-                  //
-                    console.log(item);
-                    
-                 
-                }) 
+                })
             })
-        //Problemet här är att det nya värdet av item inte hänger med
         // iterate a list using a for loop
         for (var i = 0; i < item.length; i++) {
             var listItem = document.createElement("p"); // creating paragraph element 
@@ -77,15 +64,14 @@ function dropDown() {
             document.getElementsByName(listItem).innerHTML = item;
         }
     }
-   
- 
-    chooseCountrie();
- 
+
+    chooseCountries();
+
     button.addEventListener("click",
         function dropTheList() {
             document.getElementById("dropdown-content").classList.toggle("show");
         })
-    
+
     // event to close dropdown list when clicking anywhere else 
     window.onclick = function (event) {
         if (!event.target.matches('.dropbtn')) {
@@ -99,66 +85,67 @@ function dropDown() {
             }
         }
     }
-    //Funktion för varje item som "onclick item" så händer något
+
+
     //  adding all elements to document body
     button.appendChild(fullList);
     dropDownDiv.appendChild(button);
     columnleft.appendChild(dropDownDiv);
 }
 
-
-addheader();
 dropDown();
 
 function getCountries() {
 
     //Input till parametern
     //var k = "SE";
- 
-   // console.log(document.getElementById("countrycode").innerHTML = k);
+
+    // console.log(document.getElementById("countrycode").innerHTML = k);
     //console.log(document.getElementsByTagName("div"));
 
+        var xmlhttp = new XMLHttpRequest();
+        xmlhttp.open('POST', 'http://webservices.oorsprong.org/websamples.countryinfo/CountryInfoService.wso', true);
 
-    var xmlhttp = new XMLHttpRequest();
-    xmlhttp.open("POST", 'http://webservices.oorsprong.org/websamples.countryinfo/CountryInfoService.wso?WSDL', true);
- 
- 
-    var soapmessage =
+        // build SOAP request
+        var soapmessage =
         `<soap:Envelope xmlns:soap="http://www.w3.org/2003/05/soap-envelope" xmlns:web="http://www.oorsprong.org/websamples.countryinfo">
-   <soap:Header/>
-   <soap:Body>
-      <web:CapitalCity>
-         <web:sCountryISOCode>'+'</web:sCountryISOCode>
-      </web:CapitalCity>
-   </soap:Body>
-</soap:Envelope>`;
-    xmlhttp.setRequestHeader("Content-Type", "text/xml");
-    xmlhttp.send(soapmessage);
-    console.log(soapmessage);
+        <soap:Header/>
+        <soap:Body>
+        <web:FullCountryInfo>
+        <web:sCountryISOCode>SE</web:sCountryISOCode>
+        </web:FullCountryInfo>
+        </soap:Body>
+        </soap:Envelope>`;
 
-    xmlhttp.onreadystatechange = function () {
-        if (xmlhttp.readyState == 4) {
-            if (xmlhttp.status == 200) {
-                // prints the response to the console
-                console.log(xmlhttp.responseXML);
-            }
-                
+        xmlhttp.onreadystatechange = function () {
+            if (xmlhttp.readyState == 4) {
+                if (xmlhttp.status == 200) {
+                    console.log(xmlhttp.response)
+
+                    // Code added to parse response XML and extract tag value(s)
+                    
+                    // Define parser
+                    let parser = new DOMParser();
+                    
+                    // Parse the respone text string into an XML DOM object
+                    let xmlDoc = parser.parseFromString(xmlhttp.response, "text/xml");
+                    
+                    // Extract XML tag value, copy the below line to extract additional tag values and change the tag name accordingly
+                    let countryflag = xmlDoc.getElementsByTagName('m:sCountryFlag')[0].childNodes[0];
+                    
+                    // writes the country flag url to the console (for testing purposes only)
+                    console.log(countryflag)
+                }
             }
         }
-    
-    
-
-    
+        // Send the POST request
+        xmlhttp.setRequestHeader('Content-Type', 'text/xml');
+        xmlhttp.send(soapmessage)
 
 }
+
+
+
+
+
 getCountries();
-
-
-
-
-
-
-
-
-
-
