@@ -23,4 +23,49 @@
     float: left;
     width: 25%;
     padding: 20px;
+} 
+
+ /* button */
+ .dropbtn {
+    background-color: rgb(0, 0, 0);
+    color: white;
+    padding: 1rem;
+    font-size: 1rem;
+    border: none;
+    cursor: pointer;
+  }
+  
+  /* button on hover */
+  .dropbtn:hover {
+    background-color: rgb(47, 53, 56);
+  }
+  
+  /* dropdownDiv container */
+  .dropdownDiv {
+    position: relative;
+    display: inline-block;
+  }
+  
+  /* full list with dropdown content */
+  .dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: #918d8d;
+    min-width: 10rem;
+    z-index: 1; /*  makes list appear on top of button */
+    padding: 0.5rem 1rem;
+  }
+  
+  /* settinggs for specific list items */
+  .dropdown-content p {
+    padding: 0.5rem 1rem;
+    display: block;
+  }
+  
+  .dropdown-content p:hover {
+      background-color: #ddd
 }
+
+  .show {
+      display: block;
+} 
