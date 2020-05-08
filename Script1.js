@@ -21,7 +21,7 @@ var columnright = document.createElement("div");
 columnright.className = "columnright";
 document.body.appendChild(columnright);
 var item = [0];
-var nextarray = new Array(2);
+var nextArray = new Array(2);
 // when called this function will add a drop down menu
 function dropDown() {
     console.log("adding drop down list")
@@ -37,53 +37,58 @@ function dropDown() {
     fullList.id = "dropdown-content"; // assigning id to get this element later on
     fullList.className = "dropdown-content"; // assigning classname for css file, and also window.onclick event
 
-    // will be replaced by mockAPI countries
-    /*var item = [
-        ["country 1"],
-        ["country 2"],
-        ["country 3"],
-        ["country 4"],
-        ["country 5"],
-        ["country 6"]
-    ]
-    */
+  
    
     //Get instance "country" from mock-api
     function chooseCountries() {
-        item.length = 0;
+
 
         const countryUri = 'https://5eb43f8c2b81f7001630838d.mockapi.io/countriesList';
-        fetch(countryUri)
-            .then((resp) => resp.json())
-            .then(function (mockData) {
-                console.log(mockData);
-                console.log(item);
-                return mockData.map(function (countryIso) {
-                    item.length = 0;
-                    var option = document.createElement("option");
-                    option.text = countryIso.Country;
-                    option.value = countryIso.ISO;
-                 
-                    item.push(option.text, option.value);
-                    nextarray.push([option.text, option.value]);
-                    console.table(nextarray);
-                    //console.log(item);
-                   
-                        var listItem = document.createElement("p"); // creating paragraph element 
-                        listItem.appendChild(document.createTextNode(item[0])); // adding item from list to paragraph 
-                        fullList.appendChild(listItem); // adding paragraph to list element
-                        document.getElementsByName(listItem).innerHTML = item;
-                  
-                 
-                }) 
-            })
-        // iterate a list using a for loop
-        
-    }
-   
 
-    chooseCountrie();
- 
+       
+        fetch(countryUri)
+            .then(
+                function (response) {
+                    if (response.status !== 200) {
+                        console.warn('Looks like there was a problem. Status Code: ' + response.status);
+                        return;
+                    }
+                    item.length = 0;
+                    response.json().then(function (data) {
+                        for (let i = 0; i < data.length; i++) {
+                            option = document.createElement('option');
+                            option.text = data[i].Country;
+                            option.value = data[i].ISO;
+                            //adds values to the array
+                            item.push(option.text);
+                            nextArray.push([option.text, option.value]);
+                        }
+
+                        console.log(item);
+                       console.table(nextArray)
+                        //Adds the values to the menu
+                        for (let i = 0; i < item.length; i++) {
+                            var listItem = document.createElement("p"); // creating paragraph element 
+                            listItem.appendChild(document.createTextNode(item[i])); // adding item from list to paragraph 
+                            fullList.appendChild(listItem); // adding paragraph to list element
+                        }
+
+                        //Kolla efter knapptryckningar i menyn, passera in det valet i funktionen getCountries
+
+                        //getCountries(knapptryck);
+
+                    })
+
+                })
+
+
+           
+
+   
+    }
+    chooseCountries();
+
+
     button.addEventListener("click",
         function dropTheList() {
             document.getElementById("dropdown-content").classList.toggle("show");
@@ -112,12 +117,7 @@ function dropDown() {
 
 dropDown();
 
-
-    //Input till parametern
-    //var k = "SE";
-
-    // console.log(document.getElementById("countrycode").innerHTML = k);
-    //console.log(document.getElementsByTagName("div"));
+function getCountries(isoCode) {
 
         var xmlhttp = new XMLHttpRequest();
         xmlhttp.open('POST', 'http://webservices.oorsprong.org/websamples.countryinfo/CountryInfoService.wso', true);
@@ -128,7 +128,7 @@ dropDown();
         <soap:Header/>
         <soap:Body>
         <web:FullCountryInfo>
-        <web:sCountryISOCode>SE</web:sCountryISOCode>
+        <web:sCountryISOCode>`+isoCode+`</web:sCountryISOCode>
         </web:FullCountryInfo>
         </soap:Body>
         </soap:Envelope>`;
@@ -164,4 +164,3 @@ dropDown();
 
 
 
-getCountries();
