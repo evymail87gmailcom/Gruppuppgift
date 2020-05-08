@@ -36,7 +36,7 @@ function dropDown() {
     fullList.className = "dropdown-content"; // assigning classname for css file, and also window.onclick event
 
     // will be replaced by mockAPI countries
-    var item = [
+    /*var item = [
         ["country 1"],
         ["country 2"],
         ["country 3"],
@@ -44,13 +44,43 @@ function dropDown() {
         ["country 5"],
         ["country 6"]
     ]
-    // iterate a list using a for loop
-    for (var i = 0; i < item.length; i++) {
-        var listItem = document.createElement("p"); // creating paragraph element 
-        listItem.appendChild(document.createTextNode(item[i])); // adding item from list to paragraph 
-        fullList.appendChild(listItem); // adding paragraph to list element
-    }
+    */
+    var item=[0];
+    //Get instance "country" from mock-api
+    function chooseCountrie() {
+        item.length = 0;
 
+        const countryUri = 'https://5eb43f8c2b81f7001630838d.mockapi.io/countriesList';
+        fetch(countryUri)
+            .then((resp) => resp.json())
+            .then(function (mockData) {
+                console.log(mockData);
+                return mockData.map(function (countryIso) {
+                    
+                    var option = document.createElement("option");
+                    option.text = countryIso.Country;
+                    option.value = countryIso.ISO;
+
+                    item.push(option.text);
+                  //
+                    console.log(item);
+                    
+                 
+                }) 
+            })
+        //Problemet här är att det nya värdet av item inte hänger med
+        // iterate a list using a for loop
+        for (var i = 0; i < item.length; i++) {
+            var listItem = document.createElement("p"); // creating paragraph element 
+            listItem.appendChild(document.createTextNode(item[i])); // adding item from list to paragraph 
+            fullList.appendChild(listItem); // adding paragraph to list element
+            document.getElementsByName(listItem).innerHTML = item;
+        }
+    }
+   
+ 
+    chooseCountrie();
+ 
     button.addEventListener("click",
         function dropTheList() {
             document.getElementById("dropdown-content").classList.toggle("show");
@@ -69,27 +99,22 @@ function dropDown() {
             }
         }
     }
-
+    //Funktion för varje item som "onclick item" så händer något
     //  adding all elements to document body
     button.appendChild(fullList);
     dropDownDiv.appendChild(button);
     columnleft.appendChild(dropDownDiv);
 }
 
+
 addheader();
 dropDown();
-function chooseCountrie() {
-  //  const countryUri =
-        fetch(smhiUri)
-            .then((resp) => resp.json())
-            .then(data => console.log(data));
-}
 
 function getCountries() {
 
     //Input till parametern
     //var k = "SE";
-    const utest = 'http://webservices.oorsprong.org/websamples.countryinfo/CountryInfoService.wso?WSDL';
+ 
    // console.log(document.getElementById("countrycode").innerHTML = k);
     //console.log(document.getElementsByTagName("div"));
 
