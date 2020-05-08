@@ -78,7 +78,7 @@ function dropDown() {
                             listItem.appendChild(document.createTextNode(item[i])); // adding item from list to paragraph 
                             fullList.appendChild(listItem); // adding paragraph to list element
 
-                            //Almost works
+                            // Listens 
                             listItem.addEventListener("click", function () {
                                 getCountries(isoItem[i+1]);
                             });
@@ -160,10 +160,17 @@ function getCountries(isoCode) {
                     let xmlDoc = parser.parseFromString(xmlhttp.response, "text/xml");
                     
                     // Extract XML tag value, copy the below line to extract additional tag values and change the tag name accordingly
-                    let countryflag = xmlDoc.getElementsByTagName('m:sCountryFlag')[0].childNodes[0];
+                    let countryflag = xmlDoc.getElementsByTagName('m:sCountryFlag')[0].childNodes[0].nodeValue;
                     
                     // writes the country flag url to the console (for testing purposes only)
                     console.log(countryflag)
+                    //Changes the background depending on choice.
+                    function changeBackgound(countryFlag) {
+                        document.body.style.background = "url('"+countryFlag+"')";
+           
+                    }
+                    changeBackgound(countryflag);
+
                 }
             }
         }
