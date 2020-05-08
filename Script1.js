@@ -37,10 +37,20 @@ function dropDown() {
     fullList.id = "dropdown-content"; // assigning id to get this element later on
     fullList.className = "dropdown-content"; // assigning classname for css file, and also window.onclick event
 
-    var item = [[0]];
+    // will be replaced by mockAPI countries
+    /*var item = [
+        ["country 1"],
+        ["country 2"],
+        ["country 3"],
+        ["country 4"],
+        ["country 5"],
+        ["country 6"]
+    ]
+    */
+   
     //Get instance "country" from mock-api
-    function chooseCountrie() {
-        
+    function chooseCountries() {
+        item.length = 0;
 
         const countryUri = 'https://5eb43f8c2b81f7001630838d.mockapi.io/countriesList';
         fetch(countryUri)
@@ -105,8 +115,8 @@ dropDown();
 
     //Input till parametern
     //var k = "SE";
- 
-   // console.log(document.getElementById("countrycode").innerHTML = k);
+
+    // console.log(document.getElementById("countrycode").innerHTML = k);
     //console.log(document.getElementsByTagName("div"));
 
         var xmlhttp = new XMLHttpRequest();
