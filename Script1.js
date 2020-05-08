@@ -21,6 +21,7 @@ var columnright = document.createElement("div");
 columnright.className = "columnright";
 document.body.appendChild(columnright);
 var item = [0];
+var isoItem = [0];
 var nextArray = new Array(2);
 // when called this function will add a drop down menu
 function dropDown() {
@@ -61,16 +62,28 @@ function dropDown() {
                             option.value = data[i].ISO;
                             //adds values to the array
                             item.push(option.text);
+                            isoItem.push(option.value);
                             nextArray.push([option.text, option.value]);
                         }
 
                         console.log(item);
-                       console.table(nextArray)
+
+                        //Lathund
+                        console.table(nextArray)
+                       // console.log(nextArray[4][1]);
                         //Adds the values to the menu
                         for (let i = 0; i < item.length; i++) {
                             var listItem = document.createElement("p"); // creating paragraph element 
+                          
                             listItem.appendChild(document.createTextNode(item[i])); // adding item from list to paragraph 
                             fullList.appendChild(listItem); // adding paragraph to list element
+
+                            //Almost works
+                            listItem.addEventListener("click", function () {
+                                getCountries(isoItem[i+1]);
+                            });
+                                
+                   
                         }
 
                         //Kolla efter knapptryckningar i menyn, passera in det valet i funktionen getCountries
